@@ -15,12 +15,19 @@
 
 
 // Libraries:
-#include <SPI.h>
+#include <Adafruit_BMP280.h>
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
 #include <SD.h>
-
+#include <SPI.h>
+#include <Wire.h>
 
 // Constants:
 const int chipSelect = 10;
+
+// Classes:
+Adafruit_BMP280 bmp;
+Adafruit_MPU6050 mpu;
 
 
 void setup() {
@@ -30,12 +37,39 @@ void setup() {
   // Initialize the MicroSD card.
   Serial.print("Initializing SD card...");
   if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present.");
-    while (1);
+    Serial.println("Failed to find the SD card.");
     // This would be a great place to light a red LED as a warning.
+    while (1);
   }
   Serial.println("Card initialized.");
-  // This would be a great place to light a green LED as a success.
+
+  // Initialize the BMP280 sensor.
+  if (!bmp.begin(BMP280_ADDRESS_ALT, BMP280_CHIPID)) {
+    Serial.println(F("Failed to find the BMP280 sensor."));
+    // This would be a great place to light a red LED as a warning.
+    while (1); 
+  }
+  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     // Operating Mode 
+                  Adafruit_BMP280::SAMPLING_X2,     // Temp. oversampling 
+                  Adafruit_BMP280::SAMPLING_X16,    // Pressure oversampling 
+                  Adafruit_BMP280::FILTER_X16,      // Filtering 
+                  Adafruit_BMP280::STANDBY_MS_1);   // Standby time
+  Serial.println("BMP280 initialized.");
+
+  // Initialize the MPU6050 sensor.
+  if (!mpu.begin()) {
+    Serial.println("Failed to find the MPU6050 sensor.");
+    // This would be a great place to light a red LED as a warning.
+    while (1);
+  }
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  Serial.println("MPU6050 initialized.");
+  // This would be a great place to light a green LED to show success.
+  Serial.println(mpu.getAccelerometerRange());
+  Serial.println(mpu.getGyroRange());
+  Serial.println(mpu.getFilterBandwidth());
   
 }
 
@@ -46,7 +80,29 @@ void loop() {
   String dataString = "";
 
   // Read the sensors and append to the string.
-  dataString = "2" + "," + "3";
+  int sensorDataTemp = bmp.readTemperature();
+  int sensorDataPressure = bmp.readPressure();
+  int sensorDataAltitude = bmp.readAltitude(1013.25);
+
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+  
+  int sensorDataAccelerationX = a.acceleration.x;
+  int sensorDataAccelerationY = a.acceleration.y;
+  int sensorDataAccelerationZ = a.acceleration.z;
+  int sensorDataRotationX = g.gyro.x;
+  int sensorDataRotationY = g.gyro.y;
+  int sensorDataRotationZ = g.gyro.z;
+  
+  dataString = sensorDataTemp + "," 
+              + sensorDataPressure + "," 
+              + sensorDataAltitude + ","
+              + sensorDataAccelerationX + ","
+              + sensorDataAccelerationY + ","
+              + sensorDataAccelerationZ + ","
+              + sensorDataRotationX + ","
+              + sensorDataRotationY + ","
+              + sensorDataRotationZ + ",";
 
   // Open the file. If the file is available, write to it. If not, report and error.
   File dataFile = SD.open("rocketlog.csv", FILE_WRITE);
