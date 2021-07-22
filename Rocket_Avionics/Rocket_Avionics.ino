@@ -22,7 +22,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-// Constants:
+// Global variables:
 const int chipSelect = 10;
 
 // Classes:
@@ -67,53 +67,41 @@ void setup() {
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
   Serial.println("MPU6050 initialized.");
   // This would be a great place to light a green LED to show success.
-  Serial.println(mpu.getAccelerometerRange());
-  Serial.println(mpu.getGyroRange());
-  Serial.println(mpu.getFilterBandwidth());
   
 }
 
 
 void loop() {
   
-  // Make a string for assembling the data for a log entry.
-  String dataString = "";
-
-  // Read the sensors and append to the string.
-  int sensorDataTemp = bmp.readTemperature();
-  int sensorDataPressure = bmp.readPressure();
-  int sensorDataAltitude = bmp.readAltitude(1013.25);
-
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
-  
-  int sensorDataAccelerationX = a.acceleration.x;
-  int sensorDataAccelerationY = a.acceleration.y;
-  int sensorDataAccelerationZ = a.acceleration.z;
-  int sensorDataRotationX = g.gyro.x;
-  int sensorDataRotationY = g.gyro.y;
-  int sensorDataRotationZ = g.gyro.z;
-  
-  dataString = sensorDataTemp + "," 
-              + sensorDataPressure + "," 
-              + sensorDataAltitude + ","
-              + sensorDataAccelerationX + ","
-              + sensorDataAccelerationY + ","
-              + sensorDataAccelerationZ + ","
-              + sensorDataRotationX + ","
-              + sensorDataRotationY + ","
-              + sensorDataRotationZ + ",";
 
-  // Open the file. If the file is available, write to it. If not, report and error.
-  File dataFile = SD.open("rocketlog.csv", FILE_WRITE);
+  // Open the file. If the file is available, write to it. If not, report an error.
+  File dataFile = SD.open("DATALOG.TXT", FILE_WRITE);
 
   if (dataFile) {
-    Serial.println(dataString);
-    dataFile.println(dataString);
+    dataFile.print(micros());
+    dataFile.print(",");
+    dataFile.print(bmp.readTemperature(),2);
+    dataFile.print(",");
+    dataFile.print(bmp.readPressure(),2);
+    dataFile.print(",");
+    dataFile.print(bmp.readAltitude(1013.25),2);
+    dataFile.print(",");
+    dataFile.print(a.acceleration.x,3);
+    dataFile.print(",");
+    dataFile.print(a.acceleration.y,3);
+    dataFile.print(",");
+    dataFile.print(a.acceleration.z,3);
+    dataFile.print(",");
+    dataFile.print(g.gyro.x,4);
+    dataFile.print(",");
+    dataFile.print(g.gyro.y,4);
+    dataFile.print(",");
+    dataFile.println(g.gyro.z,4);
     dataFile.close();
   }
   else {
     Serial.println("Error opening the log file.");
   }
-  
 }
