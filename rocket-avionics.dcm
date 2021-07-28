@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP BMP280_Module
+D Absolute Barometric Pressure Sensor, LGA-8
+K I2C, SPI, pressure, temperature, sensor
+F https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMP280-DS001.pdf
+$ENDCMP
+#
+#End Doc Library
