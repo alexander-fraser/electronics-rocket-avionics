@@ -878,18 +878,12 @@ F 3 "" H 8300 5650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7550 4150 7800 4150
-Wire Wire Line
-	7800 4150 7800 4900
+	7800 4350 7800 4900
 Wire Wire Line
 	7900 4900 7800 4900
 Connection ~ 7800 4900
 Wire Wire Line
 	7800 4900 7800 5150
-Wire Wire Line
-	7600 4350 8300 4350
-Wire Wire Line
-	8300 4350 8300 4900
 Wire Wire Line
 	8200 4900 8300 4900
 Connection ~ 8300 4900
@@ -1137,4 +1131,10 @@ Wire Notes Line
 	4500 7600 4500 5750
 Wire Notes Line
 	4500 5750 6450 5750
+Wire Wire Line
+	7800 4350 7550 4350
+Wire Wire Line
+	7550 4150 8300 4150
+Wire Wire Line
+	8300 4150 8300 4900
 $EndSCHEMATC
