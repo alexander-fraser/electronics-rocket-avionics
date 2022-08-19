@@ -1,0 +1,32 @@
+(kicad_sch (version 20211123) (generator eeschema)
+
+  (uuid e63e39d7-6ac0-4ffd-8aa3-1841a4541b55)
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+  (text "3-0" (at 269.24 194.31 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 4c144ffa-02d0-42da-aef1-f5175cbde9c0)
+  )
+  (text "18 August 2022" (at 207.01 194.31 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 8ef1307e-4e79-474d-a93c-be38f714571c)
+  )
+  (text "Rev 3-0: Custom STM32 board with onboard BMP280 altimeter."
+    (at 177.8 168.91 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 97dcf785-3264-40a1-a36e-8842acab24fb)
+  )
+  (text "Rocket Avionics" (at 187.96 190.5 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid aa8663be-9516-4b07-84d2-4c4d668b8596)
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
